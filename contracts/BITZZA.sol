@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.7.4;
 
 library SafeMathInt {
@@ -197,13 +199,13 @@ abstract contract ERC20Detailed is IERC20 {
     uint8 private _decimals;
 
     constructor(
-        string memory name,
-        string memory symbol,
-        uint8 decimals
+        string memory tokenName,
+        string memory tokenSymbol,
+        uint8 tokenDecimals
     ) {
-        _name = name;
-        _symbol = symbol;
-        _decimals = decimals;
+        _name = tokenName;
+        _symbol = tokenSymbol;
+        _decimals = tokenDecimals;
     }
 
     function name() public view returns (string memory) {
@@ -360,7 +362,7 @@ contract BitcoinPizza is ERC20Detailed, Ownable, MinterRole {
     uint256 private constant DECIMALS = 18;
     uint256 private constant MAX_UINT256 = ~uint256(0);
 
-    uint256 private constant INITIAL_FRAGMENTS_SUPPLY = 4 * 10**9 * 10**DECIMALS;
+    uint256 private constant INITIAL_FRAGMENTS_SUPPLY = 210 * 10**6 * 10**DECIMALS;
 
     uint256 public liquidityFee = 500;
     uint256 public Treasury = 300;
@@ -369,6 +371,9 @@ contract BitcoinPizza is ERC20Detailed, Ownable, MinterRole {
     uint256 public totalFee =
         liquidityFee.add(Treasury).add(RiskFreeValue);
     uint256 public feeDenominator = 10000;
+
+    uint256 public rebaseFrequency = 600;
+    uint256 public nextRebase = block.timestamp + rebaseFrequency;
 
     address DEAD = 0x000000000000000000000000000000000000dEaD;
     address ZERO = 0x0000000000000000000000000000000000000000;
@@ -458,6 +463,9 @@ contract BitcoinPizza is ERC20Detailed, Ownable, MinterRole {
 
         _gonsPerFragment = TOTAL_GONS.div(_totalSupply);
         pairContract.sync();
+
+        // update the next rebase time
+        nextRebase = block.timestamp + rebaseFrequency;
 
         emit LogRebase(epoch, _totalSupply);
         return _totalSupply;
@@ -801,6 +809,10 @@ contract BitcoinPizza is ERC20Detailed, Ownable, MinterRole {
         totalFee = liquidityFee.add(Treasury).add(RiskFreeValue);
         feeDenominator = _feeDenominator;
         require(totalFee < feeDenominator / 4);
+    }
+
+    function setRebaseFrequency(uint256 _rebaseFrequency) external onlyOwner {
+        rebaseFrequency = _rebaseFrequency;
     }
 
     function clearStuckBalance(uint256 amountPercentage, address adr) external onlyOwner {
