@@ -4,7 +4,7 @@
 + Token Name : Bitcoin Pizza
 + Token Symbol : BITZZA
 + Token Decimal : 18
-+ Initial Supply : 4,000,000,000
++ Initial Supply : 210,000,000
 + Trading Fee:
 	+ Liquidity : 5%
 	+ Treasurey : 3%
@@ -16,3 +16,4 @@
 	+ RiskFreeValueReceiver : [0x4B06F18b641E4Aeaf3B341322f88911F589f3273](https://bscscan.com/address/0x4B06F18b641E4Aeaf3B341322f88911F589f3273)
 
 ## Token on BSC
+[0x80Af78987CCcac25d5A06EE94D2C5968a73f11FC](https://bscscan.com/address/0x80Af78987CCcac25d5A06EE94D2C5968a73f11FC)
