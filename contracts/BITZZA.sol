@@ -372,6 +372,7 @@ contract BitcoinPizza is ERC20Detailed, Ownable, MinterRole {
         liquidityFee.add(Treasury).add(RiskFreeValue);
     uint256 public feeDenominator = 10000;
 
+    uint256 public rebaseEpoch = 1;
     uint256 public rebaseFrequency = 600;
     uint256 public nextRebase = block.timestamp + rebaseFrequency;
 
@@ -440,14 +441,14 @@ contract BitcoinPizza is ERC20Detailed, Ownable, MinterRole {
         blacklist[_user] = _flag;
     }
 
-    function rebase(uint256 epoch, int256 supplyDelta)
+    function rebase(int256 supplyDelta)
         external
         onlyOwner
         returns (uint256)
     {
         require(!inSwap, "Try again");
         if (supplyDelta == 0) {
-            emit LogRebase(epoch, _totalSupply);
+            emit LogRebase(rebaseEpoch, _totalSupply);
             return _totalSupply;
         }
 
@@ -467,7 +468,8 @@ contract BitcoinPizza is ERC20Detailed, Ownable, MinterRole {
         // update the next rebase time
         nextRebase = block.timestamp + rebaseFrequency;
 
-        emit LogRebase(epoch, _totalSupply);
+        emit LogRebase(rebaseEpoch, _totalSupply);
+        rebaseEpoch += 1;
         return _totalSupply;
     }
 
