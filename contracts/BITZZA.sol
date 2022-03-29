@@ -372,7 +372,7 @@ contract BitcoinPizza is ERC20Detailed, Ownable, MinterRole {
         liquidityFee.add(Treasury).add(RiskFreeValue);
     uint256 public feeDenominator = 10000;
 
-    uint256 rebaseEpoch = 1;
+    uint256 public rebaseEpoch = 1;
     uint256 public rebaseFrequency = 600;
     uint256 public nextRebase = block.timestamp + rebaseFrequency;
 
